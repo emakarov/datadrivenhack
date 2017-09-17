@@ -87,11 +87,9 @@
     app.workMarker = L.marker(sgcoords, {draggable: true}).addTo(app.map);
     app.workMarker.bindPopup("<b>Put me to your work location!</b>").openPopup();
   }
-
   $(window).on('resize', function () {
     app.onresize();
   });
-
   app.setRangeValues = function () {
     var housing = parseInt($("#range_housing").val());
     var food = parseInt($("#range_food").val());
@@ -103,6 +101,22 @@
     $("#range_transport_value").html( transport );
     $("#total_value").html(housing + food + events + transport);
   }
+  app.selectEvents = function() {
+    var cost = $("#range_events_value").html()
+    $.get('/events/?cost='+cost, function(data) {
+        $("#events").html('');
+        for (var o in data.objects) {
+          var ob = data.objects[o];
+          console.log(ob, ob.price, ob.name);
+          var html = '<div style="padding:10px;">';
+          html += '<b>'+ob.price+'SGD </b>';
+          html += ob.name;
+          html += '</div>';
+          console.log(html);
+          $("#events").append($(html));          
+        }
+    });
+  }
   $(document).ready(function() {
     app.onresize();
     app.initmap();
@@ -110,6 +124,10 @@
       app.setRangeValues();
     });
     app.setRangeValues();
+    $("#range_events").on('change', function() {
+      app.selectEvents();
+    });
+    
   });
   window.app = app;
 </script>
