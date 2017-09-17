@@ -105,18 +105,20 @@
     $("#total_value").html(housing + food + events + transport);
   }
   app.selectEvents = function() {
-    var cost = $("#range_events_value").html()
+    var cost = $("#range_events_value").html();
+    var evnames = [];
     $.get('/events/?cost='+cost, function(data) {
         $("#events").html('');
         for (var o in data.objects) {
           var ob = data.objects[o];
-          console.log(ob, ob.price, ob.name);
           var html = '<div style="padding:10px;">';
           html += '<b>'+ob.price+'SGD </b>';
           html += ob.name;
           html += '</div>';
-          console.log(html);
-          $("#events").append($(html));          
+          if (ob.name not in obnames) {
+            $("#events").append($(html));
+            obnames.push(ob.name);
+          }          
         }
     });
   }
