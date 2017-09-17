@@ -58,7 +58,7 @@ def properties(request):
     transit_cost = float(request.GET.get('transit_cost'))
     transit_lat = float(request.GET.get('transit_lat'))
     transit_lon = float(request.GET.get('transit_lon'))
-    flats = models.PropertyRental.objects.filter(price__lt=cost).order_by('-rating')[0:20]
+    flats = models.PropertyRental.objects.filter(price__lt=cost).order_by('-rating')[0:50]
     flats_list = [{'address': p.address, 'price': p.price, 'rating': p.rating, 'bedrooms': p.bedrooms, 'prop_type': p.property_type, 'img': p.image_1, 'img2': p.image_2, 'lat': p.lat, 'lon': p.lon} for p in flats]
     flats_list_with_transit = []
     for f in flats_list:
