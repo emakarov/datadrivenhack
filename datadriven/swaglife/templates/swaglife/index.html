@@ -39,17 +39,17 @@
         <div class="col-ps-12">
           <div>Transportation: <span id="range_transport_value"></span></div>
         </div>
-         <input class='ranger' id="range_transport" type="range" max='10000' min='0'/>
+         <input class='ranger' id="range_transport" type="range" max='6000' min='0'/>
       </div>
       <div style="padding:20px;">
         <div class="col-ps-12">
           <div>Entertainment: <span id="range_events_value"></span></div>
         </div>
-         <input class='ranger' id="range_events" type="range" max='10000' min='0'/>
+         <input class='ranger' id="range_events" type="range" max='6000' min='0'/>
       </div>
       <div style="padding:20px">
         <div class="col-ps-12">
-          <div>Total: <span id="total_value"></span></div>
+          <div style="font-size:30">Total: <span id="total_value"></span></div>
         </div>
       </div>
     </div>
@@ -57,14 +57,14 @@
   <div class='col-xs-8 greybg pd0'>
     <div class='col-xs-12 pd0' id='property'>
       <div class='col-xs-6 pd0' id='map'></div>
-      <div class='col-xs-6 pd0'></div>
+      <div class='col-xs-6 pd0' id='property_list' style='overflow:auto'></div>
     </div>
   </div>
   <div class='col-xs-6'>
-    <div id='food'></div>
+    <div id='food' style='overflow:auto'></div>
   </div>
   <div class='col-xs-6'>
-    <div id='events'></div>
+    <div id='events' style='overflow:auto'></div>
   </div>
 </div>
 </body>
@@ -76,6 +76,8 @@
     var win_h = $(window).height();
     var half_h = parseInt(win_h/2);
     $('.col-xs-6').css('height', half_h + 'px');
+    $('#events').css('height', half_h + 'px');
+    $('#food').css('height', half_h + 'px');
     $('#map').css('height', half_h + 'px');
   }
   app.initmap = function() {
@@ -117,6 +119,48 @@
         }
     });
   }
+  app.selectProperties = function() {
+    var cost = $("#range_housing_value").html()
+    var transit_cost = $("#range_transport_value").html()
+    var lat = app.workMarker.getLatLng().lat;
+    var lon = app.workMarker.getLatLng().lng;
+    $.get('/properties/?cost='+cost+'&transit_cost='+transit_cost+'&transit_lat='+lat+'&transit_lon='+lon, function(data) {
+        $("#property_list").html('');
+        for (var o in data.objects) {
+          var ob = data.objects[o];
+          console.log(ob, ob.price, ob.name);
+          var html = '<div style="padding:10px;">';
+          html += '<b>'+parseInt(ob.price)+'SGD </b>';
+          html += ob.address;
+          html += '<br>Rating: ' + parseInt(ob.rating);
+          if (ob.taxi) {
+            html += '<br>You can drive by taxi!';
+          } else {
+            html += '<br>Only public transit available';
+          }
+          html += '</div>';
+          $("#property_list").append($(html));
+        }
+    });
+  }
+  app.selectFood = function() {
+    var cost = $("#range_food_value").html();
+    $.get('/food/?cost='+cost, function(data) {
+        $("#food").html('');
+        for (var o in data.objects) {
+          var ob = data.objects[o];
+          var html = '<div style="padding:10px;">';
+          var b = ob.breakfast;
+          var l = ob.lunch;
+          var d = ob.dinner;
+          html += 'Breakfast: ' + b.name + ' at ' + b.venue + ' for ' + b.price;
+          html += '<br>Lunch' + l.name + ' at ' + l.venue + ' for ' + l.price;
+          html += '<br>Dinner' + d.name + ' at ' + d.venue + ' for ' + d.price;
+          html += '</div>';
+          $("#food").append($(html));
+        }
+    });
+  }
   $(document).ready(function() {
     app.onresize();
     app.initmap();
@@ -127,8 +171,22 @@
     $("#range_events").on('change', function() {
       app.selectEvents();
     });
-    
+    $("#range_housing").on('change', function() {
+      app.selectProperties();
+    });
+    $("#range_transport").on('change', function() {
+      app.selectProperties();
+    });
+    $("#range_food").on('change', function() {
+      app.selectFood();
+    });
+      app.setRangeValues();
+      app.selectEvents();
+      app.selectProperties();
+      app.selectFood();
+      app.workMarker.on('move', function(e) {
+      app.selectProperties();
+      });
   });
-  window.app = app;
 </script>
 </html>

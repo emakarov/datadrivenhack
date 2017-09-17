@@ -36,7 +36,7 @@ class PropertyRental(models.Model):
 
 
     def __str__(self):
-        return '{}b at {}'.formt(self.bedrooms, self.address) 
+        return '{}b at {}'.format(self.bedrooms, self.address) 
 
     class Meta:
         verbose_name = 'Property Rental'
@@ -50,7 +50,7 @@ class Food(models.Model):
     food_type = models.CharField(max_length=1, choices=FOOD_TYPES_CHOICES)
 
     def __str__(self):
-        return {}.format(self.name)
+        return '{}'.format(self.name)
 
     class Meta:
         verbose_name = 'Food'
