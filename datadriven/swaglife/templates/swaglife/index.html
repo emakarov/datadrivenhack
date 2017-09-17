@@ -20,7 +20,7 @@
     <div id='settings'>
       <div style="padding:10px 20px;">
         <div class="col-ps-12">
-          <div>My budget for a month:<span id="total_value"></span></div>
+          <div>My budget for a month: <span id="total_value"></span> SGD</div>
         </div>
       </div>
       <div style="padding:10px 20px;">
@@ -158,9 +158,9 @@
           var b = ob.breakfast;
           var l = ob.lunch;
           var d = ob.dinner;
-          html += 'Breakfast: ' + b.name + ' at ' + b.venue + ' for ' + b.price;
-          html += '<br>Lunch' + l.name + ' at ' + l.venue + ' for ' + l.price;
-          html += '<br>Dinner' + d.name + ' at ' + d.venue + ' for ' + d.price;
+          html += 'Breakfast: ' + b.name + ' at ' + b.venue + ' for ' + b.price +' SGD';
+          html += '<br>Lunch' + l.name + ' at ' + l.venue + ' for ' + l.price + ' SGD';
+          html += '<br>Dinner' + d.name + ' at ' + d.venue + ' for ' + d.price + ' SGD';
           html += '</div>';
           $("#food").append($(html));
         }
