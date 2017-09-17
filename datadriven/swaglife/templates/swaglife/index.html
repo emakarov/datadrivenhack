@@ -3,10 +3,114 @@
 <head>
 <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400,600,800" />
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.37.0/mapbox-gl.css' rel='stylesheet' />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" crossorigin=""/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+.greybg {
+  background: #eee;
+}
+.pd0 {
+  padding: 0;
+}
+</style>
 </head>
 <body>
-SWAGLIFE
+<div class='col-xs-12' style='height;100%'>
+  <div class='col-xs-4'>
+    <div id='settings'>
+      <div style="padding:10px 20px;">
+        <div class="col-ps-12">
+          <div>My budget for a month:</div>
+        </div>
+      </div>
+      <div style="padding:10px 20px;">
+        <div class="col-ps-12">
+          <div>Housing: <span id="range_housing_value"></span></div>
+        </div>
+        <input class='ranger' id="range_housing" type="range" value='1000' max='10000' min='0'/>
+      </div>
+      <div style="padding:20px;">
+        <div class="col-ps-12">
+          <div>Food: <span id="range_food_value"></span></div>
+        </div>
+        <input class='ranger' id="range_food" type="range" max='10000' min='0'/>
+      </div>
+      <div style="padding:20px;">
+        <div class="col-ps-12">
+          <div>Transportation: <span id="range_transport_value"></span></div>
+        </div>
+         <input class='ranger' id="range_transport" type="range" max='10000' min='0'/>
+      </div>
+      <div style="padding:20px;">
+        <div class="col-ps-12">
+          <div>Entertainment: <span id="range_events_value"></span></div>
+        </div>
+         <input class='ranger' id="range_events" type="range" max='10000' min='0'/>
+      </div>
+      <div style="padding:20px">
+        <div class="col-ps-12">
+          <div>Total: <span id="total_value"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class='col-xs-8 greybg pd0'>
+    <div class='col-xs-12 pd0' id='property'>
+      <div class='col-xs-6 pd0' id='map'></div>
+      <div class='col-xs-6 pd0'></div>
+    </div>
+  </div>
+  <div class='col-xs-6'>
+    <div id='food'></div>
+  </div>
+  <div class='col-xs-6'>
+    <div id='events'></div>
+  </div>
+</div>
 </body>
+<script src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+<script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js" crossorigin=""></script>
+<script>
+  var app = {};
+  app.onresize = function() {
+    var win_h = $(window).height();
+    var half_h = parseInt(win_h/2);
+    $('.col-xs-6').css('height', half_h + 'px');
+    $('#map').css('height', half_h + 'px');
+  }
+  app.initmap = function() {
+    var sgcoords = [1.352083, 103.81983600000001];
+    app.map = L.map('map').setView(sgcoords, 11);
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(app.map);
+    app.workMarker = L.marker(sgcoords, {draggable: true}).addTo(app.map);
+    app.workMarker.bindPopup("<b>Put me to your work location!</b>").openPopup();
+  }
+
+  $(window).on('resize', function () {
+    app.onresize();
+  });
+
+  app.setRangeValues = function () {
+    var housing = parseInt($("#range_housing").val());
+    var food = parseInt($("#range_food").val());
+    var events = parseInt($("#range_events").val()); 
+    var transport = parseInt($("#range_transport").val());
+    $("#range_housing_value").html( housing );
+    $("#range_food_value").html( food );
+    $("#range_events_value").html( events );
+    $("#range_transport_value").html( transport );
+    $("#total_value").html(housing + food + events + transport);
+  }
+  $(document).ready(function() {
+    app.onresize();
+    app.initmap();
+    $(".ranger").on('input', function() {
+      app.setRangeValues();
+    });
+    app.setRangeValues();
+  });
+  window.app = app;
+</script>
 </html>

@@ -28,6 +28,12 @@ class PropertyRental(models.Model):
     property_name = models.CharField(default='', max_length=255)
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
+    image_1 = models.CharField(default='', max_length=255)
+    image_2 = models.CharField(default='', max_length=255)
+    image_3 = models.CharField(default='', max_length=255)
+    image_4 = models.CharField(default='', max_length=255)
+    image_5 = models.CharField(default='', max_length=255)
+
 
     def __str__(self):
         return '{}b at {}'.formt(self.bedrooms, self.address) 
