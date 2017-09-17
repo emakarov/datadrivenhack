@@ -115,10 +115,7 @@
           html += '<b>'+ob.price+'SGD </b>';
           html += ob.name;
           html += '</div>';
-          if (ob.name not in obnames) {
             $("#events").append($(html));
-            obnames.push(ob.name);
-          }          
         }
     });
   }
