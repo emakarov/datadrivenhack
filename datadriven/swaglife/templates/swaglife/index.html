@@ -80,6 +80,7 @@
     $('#food').css('height', half_h + 'px');
     $('#map').css('height', half_h + 'px');
   }
+  app.houses = new Array();
   app.initmap = function() {
     var sgcoords = [1.352083, 103.81983600000001];
     app.map = L.map('map').setView(sgcoords, 11);
@@ -124,6 +125,9 @@
     var transit_cost = $("#range_transport_value").html()
     var lat = app.workMarker.getLatLng().lat;
     var lon = app.workMarker.getLatLng().lng;
+    for (var i in app.houses) {
+      app.map.removeLayer(app.houses[i]);
+    }
     $.get('/properties/?cost='+cost+'&transit_cost='+transit_cost+'&transit_lat='+lat+'&transit_lon='+lon, function(data) {
         $("#property_list").html('');
         for (var o in data.objects) {
@@ -140,6 +144,8 @@
           }
           html += '</div>';
           $("#property_list").append($(html));
+          var m = L.circle([parseFloat(ob.lat), parseFloat(ob.lon)], {radius: 200}).addTo(app.map);
+          app.houses.push(m);
         }
     });
   }
